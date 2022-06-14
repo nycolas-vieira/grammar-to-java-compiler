@@ -1,30 +1,96 @@
 grammar Gramatica;
+//TODO:
+// CRIAR O FOR
+// Precedência de exp matemática
+// Verificação de tipos (atribuição x operação)
+// Leitura (Scanner)
+// Impressão
+// Verificar se a variavél já foi iniciada
 
-// 1
-init: iniciar (linha_codigo)+ finalizar;
-
+// Ínicio e fim de código principal
+init: iniciar corpo finalizar;
 iniciar: 'iniciar';
-
 finalizar: 'finalizar';
 
-// 2 
-linha_codigo: comando | expressao | variavel;
 
-comando: cmd_leitura | cmd_escrita;
+// Corpo do código
+corpo: sentenca*;
+sentenca : atribuicao | se | enquanto; 
 
-expressao: expr_repeticao | expr_decisao;
+// Atribuicao
+atribuicao : ID ATRIBUICAO expressao FIM_LINHA;
 
-variavel: declarar_variavel | atribuir_variavel;
+expressao
+ : NAO expressao
+ | expressao (MULT | DIV) expressao
+ | expressao (SOMA | SUB) expressao
+ | expressao (MENOR_IGUAL | MAIOR_IGUAL | MENOR | MAIOR) expressao
+ | expressao (IGUAL | NAO_IGUAL) expressao
+ | expressao E expressao
+ | expressao OU expressao
+ | reservado
+ ;
 
-// 3
-cmd_leitura: 'a';
+reservado
+ : APAREN expressao FPAREN
+ | (INTEIRO | FLUTUANTE)
+ | (VERDADEIRO | FALSO)
+ | ID 
+ | TEXTO
+ | NULO
+ ;
 
-cmd_escrita: 'b';
+se
+: SE bloco_condicao (SENAO bloco_expressao)?
+;
 
-expr_repeticao: 'b';
+bloco_condicao
+: expressao bloco_expressao
+;
+ 
+enquanto: ENQUANTO expressao bloco_expressao;
 
-expr_decisao: 'b';
+bloco_expressao: ACHAVE corpo FCHAVE | sentenca;
 
-declarar_variavel: 'b';
 
-atribuir_variavel: 'b';
+FIM_LINHA: ';';
+ATRIBUICAO: '=';
+MULT: '*';
+DIV: '/';
+SOMA: '+';
+SUB: '-';
+NULO: ' ';
+NAO: '!';
+APAREN: '(';
+FPAREN: ')';
+ACHAVE: '{';
+FCHAVE: '}';
+MENOR_IGUAL: '<=';
+MAIOR_IGUAL: '>=';
+MENOR: '<';
+MAIOR: '>';
+IGUAL: '==';
+NAO_IGUAL: '!=';
+E: '&&';
+OU: '||';
+SE: 'se';
+SENAO: 'senao';
+VERDADEIRO: 'verdadeiro';
+FALSO: 'falso';
+TEXTO: '"' (~["\r\n] | '""')* '"'; //SE DER MERDA VOLTA AQUI //FOI DE BOA
+ENQUANTO: 'enquanto';
+
+ID
+ : [a-zA-Z_] [a-zA-Z_0-9]* //[a-z][a-zA-Z0-9]+
+ ;
+
+FLUTUANTE
+: [0-9]+ '.' [0-9]*
+;
+
+INTEIRO
+ : [0-9]+
+ ;
+
+// Pular espaços em branco
+WS: [ \t\r\n]+ -> skip;
