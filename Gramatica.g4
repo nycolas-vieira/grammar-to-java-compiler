@@ -12,6 +12,8 @@ init: iniciar corpo finalizar;
 iniciar: 'iniciar';
 finalizar: 'finalizar';
 
+// Pular espaços em branco
+WS: [ \t\r\n]+ -> skip;
 
 // Corpo do código
 corpo: sentenca*;
@@ -52,7 +54,6 @@ enquanto: ENQUANTO expressao bloco_expressao;
 
 bloco_expressao: ACHAVE corpo FCHAVE | sentenca;
 
-
 FIM_LINHA: ';';
 ATRIBUICAO: '=';
 MULT: '*';
@@ -92,5 +93,3 @@ INTEIRO
  : [0-9]+
  ;
 
-// Pular espaços em branco
-WS: [ \t\r\n]+ -> skip;
