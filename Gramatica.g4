@@ -1,7 +1,7 @@
 grammar Gramatica;
 //TODO:
 // CRIAR O FOR
-// Precedência de exp matemática
+// Precedência de exp matemática -- VERIFICAR NO JAVA
 // Verificação de tipos (atribuição x operação)
 // Leitura (Scanner)
 // Impressão
@@ -17,10 +17,17 @@ WS: [ \t\r\n]+ -> skip;
 
 // Corpo do código
 corpo: sentenca*;
-sentenca : atribuicao | se | enquanto; 
+sentenca
+  : atribuicao FIM_LINHA
+  | se
+  | enquanto
+  | para
+  | ler FIM_LINHA
+  | imprimir FIM_LINHA
+  ;
 
 // Atribuicao
-atribuicao : ID ATRIBUICAO expressao FIM_LINHA;
+atribuicao: ID ATRIBUICAO expressao;
 
 expressao
  : NAO expressao
@@ -54,6 +61,13 @@ enquanto: ENQUANTO expressao bloco_expressao;
 
 bloco_expressao: ACHAVE corpo FCHAVE | sentenca;
 
+para
+: PARA APAREN atribuicao SEPERADOR_ATRIBUTO expressao SEPERADOR_ATRIBUTO expressao FPAREN bloco_expressao;
+
+ler: LER expressao;
+
+imprimir: IMPRIMIR expressao;
+
 FIM_LINHA: ';';
 ATRIBUICAO: '=';
 MULT: '*';
@@ -80,6 +94,10 @@ VERDADEIRO: 'verdadeiro';
 FALSO: 'falso';
 TEXTO: '"' (~["\r\n] | '""')* '"'; //SE DER MERDA VOLTA AQUI //FOI DE BOA
 ENQUANTO: 'enquanto';
+SEPERADOR_ATRIBUTO: ',';
+LER: 'ler';
+IMPRIMIR: 'imprimir';
+PARA: 'para';
 
 ID
  : [a-zA-Z_] [a-zA-Z_0-9]* //[a-z][a-zA-Z0-9]+
