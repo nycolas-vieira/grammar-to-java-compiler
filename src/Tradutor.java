@@ -22,7 +22,7 @@ public class Tradutor extends GramaticaBaseListener {
         if (token[1].charAt(0) == '"') {
             currentType = "text";
         }
-        else if (token[1].charAt(0) == 'v' || token[1].charAt(0) == 'f') {
+        else if (token[1].charAt(0) == 't' || token[1].charAt(0) == 'f') {
             currentType = "boolean";
         }
         else if (token[1].matches("\\d+")) {
