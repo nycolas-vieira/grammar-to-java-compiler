@@ -1,0 +1,7 @@
+start
+integer varInt = 10;
+text txt = "ola";
+boolean isValid = true;
+decimal myMoney = 25.0;
+
+finish
