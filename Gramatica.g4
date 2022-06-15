@@ -1,8 +1,7 @@
 grammar Gramatica;
 //TODO:
-// Precedência de exp matemática -- VERIFICAR NO JAVA
-// Verificação de tipos (atribuição x operação) // TRADUTOR
-// Verificar se a variavél já foi iniciada // TRADUTOR
+// Precedência de exp matemática -- VERIFICAR NO JAVA Verificação de tipos (atribuição x operação)
+// // TRADUTOR Verificar se a variavél já foi iniciada // TRADUTOR
 
 // Ínicio e fim de código principal
 init: iniciar corpo finalizar;
@@ -14,39 +13,36 @@ WS: [ \t\r\n]+ -> skip;
 
 // Corpo do código
 corpo: sentenca*;
-sentenca
-  : atribuicao fim_linha
-  | se_condicao
-  | enquanto_loop
-  | para_loop
-  | ler_fun fim_linha
-  | imprimir_fun fim_linha
-  ;
+sentenca:
+	atribuicao fim_linha
+	| se_condicao
+	| enquanto_loop
+	| para_loop
+	| ler_fun fim_linha
+	| imprimir_fun fim_linha;
 
 // Atribuicao
 atribuicao: declarar_variavel | atribuir_valor;
 declarar_variavel: tipovar id atribuicao_sinal expressao;
 atribuir_valor: id atribuicao_sinal expressao;
 
-expressao
- : nao expressao
- | expressao (mult | div) expressao
- | expressao (soma | sub) expressao
- | expressao (menor_igual | maior_igual | menor | maior) expressao
- | expressao (igual | nao_igual) expressao
- | expressao e expressao
- | expressao ou expressao
- | reservado
- ;
+expressao:
+	nao expressao
+	| expressao (mult | div) expressao
+	| expressao (soma | sub) expressao
+	| expressao (menor_igual | maior_igual | menor | maior) expressao
+	| expressao (igual | nao_igual) expressao
+	| expressao e expressao
+	| expressao ou expressao
+	| reservado;
 
-reservado
- : aparen expressao fparen
- | (inteiro | flutuante)
- | (verdadeiro | falso)
- | id
- | texto
- | nulo
- ;
+reservado:
+	aparen expressao fparen
+	| (inteiro | decimal)
+	| booleano
+	| id
+	| texto
+	| nulo;
 
 se_condicao: se bloco_condicao (senao bloco_expressao)?;
 
@@ -56,18 +52,22 @@ enquanto_loop: enquanto expressao bloco_expressao;
 
 bloco_expressao: achave corpo fchave | sentenca;
 
-para_loop: para aparen declarar_variavel separador_atributo expressao separador_atributo atribuir_valor fparen bloco_expressao;
+para_loop:
+	para aparen declarar_variavel separador_atributo expressao separador_atributo incremento_loop
+		fparen bloco_expressao;
+
+incremento_loop: id incrementador;
 
 ler_fun: id atribuicao_sinal ler aparen fparen;
 
 imprimir_fun: imprimir expressao;
 
-tipovar
-: TV_INTEIRO
-| TV_BOOLEANO
-| TV_TEXTO
-| TV_DECIMAL
-;
+incrementador: MENOS_MENOS | MAIS_MAIS;
+
+MENOS_MENOS: '--';
+MAIS_MAIS: '++';
+
+tipovar: TV_INTEIRO | TV_BOOLEANO | TV_TEXTO | TV_DECIMAL;
 
 TV_INTEIRO: 'inteiro';
 TV_BOOLEANO: 'booleano';
@@ -146,6 +146,8 @@ verdadeiro: VERDADEIRO;
 FALSO: 'falso';
 falso: FALSO;
 
+booleano: verdadeiro | falso;
+
 TEXTO: '"' (~["\r\n] | '""')* '"';
 texto: TEXTO;
 
@@ -167,8 +169,7 @@ para: PARA;
 ID: [a-zA-Z_] [a-zA-Z_0-9]*; //[a-z][a-zA-Z0-9]+
 id: ID;
 
-FLUTUANTE: [0-9]+ '.' [0-9]*;
-flutuante: FLUTUANTE;
-
-INTEIRO : [0-9]+;
+DECIMAL: [0-9]+ '.' [0-9]*;
+decimal: DECIMAL;
+INTEIRO: [0-9]+;
 inteiro: INTEIRO;
